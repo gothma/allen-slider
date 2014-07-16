@@ -16,6 +16,7 @@
           .addClass( "custom-widgetlist" );
         this.list = $( "<ul>" ).appendTo( this.element );
         this.add();
+        this.add();
       },
       add: function() {
         $( "<li>" ).appendTo( this.list ).slider({
@@ -32,7 +33,24 @@
           return this._super();
       },
       _compare: function( interval1, interval2 ) {
-        start1 = $( "#container li" ).get()
+        s1 = interval1.slider( "values", 0 );
+        s2 = interval2.slider( "values", 0 );
+        e1 = interval1.slider( "values", 1 );
+        e2 = interval2.slider( "values", 1 );
+
+        if (e1 < s2) return "<";
+        if (e1 == s2 && s1 < e1 && s2 < e2) return "m";
+        if (s1 < s2 && s2 < e1 && e1 < e2) return "o";
+        if (e1 == e2 && s1 < s2) return "fi";
+        if (s1 < s2 && s2 < e2 && e2 < e1) return "di";
+        if (s1 == s2 && e1 < e2) return "s";
+        if (s1 == s2 && e1 == e2) return "=";
+        if (s1 == s2 && e2 < e1) return "si";
+        if (s2 < s1 && s1 < e1 && e1 < e2) return "d";
+        if (e1 == e2 && s2 < s1) return "f";
+        if (s2 < s1 && s1 < e2 && e2 < e1) return "oi";
+        if (e2 == s1 && s2 < s1 && e2 < e1) return "mi";
+        if (s2 < e2 && e2 < s1 && s1 < e1) return ">"; 
       }
     });
 
@@ -50,6 +68,7 @@
 <div id="add-button">+</div>
 <div id="container"></div>
 </form>
+<div>f <span id="relation">?</span> g</div>
  
 </body>
 </html>
