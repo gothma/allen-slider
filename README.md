@@ -1,7 +1,7 @@
 # Allen Slider
 *A interval slider to understand Allen's interval algebra*
 
-![Screenshot of the applet](screenshot.png)
+[![Screenshot of the applet](screenshot.png)](http://gothma.github.io/allen-slider)
 
 This applet aims to help thinking about and understanding [*Allens's interval algebra*](http://en.wikipedia.org/wiki/Allen's_interval_algebra)
 
