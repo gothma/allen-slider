@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Allen Algebra</title>
+  <style type="text/css">
+    body {
+      font-family: "Helvetica", "Arial", sans-serif;
+    }
+    #container {
+      margin: 20px;
+      max-width: 640px;
+    }
+    #container li {
+      margin-bottom: 10px;
+    }
+    #relations {
+      list-style-type: square;
+    }
+
+  </style>
+  <link rel="stylesheet" href="lib/jquery-ui-1.11.0/jquery-ui.css">
+  <script src="lib/jquery-ui-1.11.0/external/jquery/jquery.js"></script>
+  <script src="lib/jquery-ui-1.11.0/jquery-ui.js"></script>
+  <script>
+  function compare( interval1, interval2 ) {
+
+    s1 = $(interval1).slider( "values", 0 );
+    s2 = $(interval2).slider( "values", 0 );
+    e1 = $(interval1).slider( "values", 1 );
+    e2 = $(interval2).slider( "values", 1 );
+
+    if (e1 < s2) return "before (<)";
+    if (e1 == s2 && s1 < e1 && s2 < e2) return "meets (m)";
+    if (s1 < s2 && s2 < e1 && e1 < e2) return "overlaps (o)";
+    if (e1 == e2 && s1 < s2) return "is finished by (fi)";
+    if (s1 < s2 && s2 < e2 && e2 < e1) return "encloses (di)";
+    if (s1 == s2 && e1 < e2) return "starts (s)";
+    if (s1 == s2 && e1 == e2) return "equals (=)";
+    if (s1 == s2 && e2 < e1) return "is started by (si)";
+    if (s2 < s1 && s1 < e1 && e1 < e2) return "during (d)";
+    if (e1 == e2 && s2 < s1) return "finishes (f)";
+    if (s2 < s1 && s1 < e2 && e2 < e1) return "is overlapped by (oi)";
+    if (e2 == s1 && s2 < s1 && e2 < e1) return "is met by (mi)";
+    if (s2 < e2 && e2 < s1 && s1 < e1) return "after (>)"; 
+  }
+
+  function rebuild() {
+    $( "#relations" ).empty();
+    $( "#container li" ).each(function (i, elemA) {
+      $( "#container li" ).each(function (j, elemB) {
+        if (i < j) {
+          console.log(i, j);
+          $( "#relations" ).append($("<li>").text(
+            String.fromCharCode(65 + i) 
+            + " " + compare(elemA, elemB) + " " 
+            + String.fromCharCode(65 + j)));          
+        }
+      });
+    });
+  }
+
+  $( function() {
+    $.widget( "custom.widgetlist", {
+      // These options will be used as defaults
+      options: { className : "" },
+      _create: function() {
+        this.element
+          .addClass( "custom-widgetlist" );
+        this.list = $( "<ol>" )
+          .css("list-style-type", "upper-latin")
+          .appendTo( this.element );
+        this.add();
+      },
+      add: function() {
+        $( "<li>" ).appendTo( this.list ).slider({
+          orientation: "horizontal",
+          range: true,
+          values: [ 0, 100 ],
+          change: function( event, ui ) {
+            rebuild();
+          }
+        });
+        rebuild();
+      },
+      remove: function() {
+        $("#container li").eq(-1).remove();
+        rebuild();
+      },
+      _destroy: function() {
+          // Use the destroy method to reverse everything your plugin has applied
+          return this._super();
+      }
+    });
+  $( "#relation-container" ).disableSelection();
+  $( "#container" ).widgetlist();
+  $( "#add-button" )
+    .button()
+    .click( function() {
+      $( "#container" ).widgetlist( "add" );
+    });
+  $( "#remove-button" )
+    .button()
+    .click( function() {
+      $( "#container" ).widgetlist( "remove" );
+    });
+  });
+  </script>
+</head>
+<body>
+  <h1> Allen's Interval Algebra </h1>
+<form id="relation-container">
+  <div>Intervals:</div>
+  <div id="buttons">
+    <div id="remove-button">-</div>
+    <div id="add-button">+</div>
+  </div>
+  <div id="container"></div>
+</form>
+<div>Relations:
+<ul id = "relations"></ul>
+</div>
+ 
+</body>
+</html>
