@@ -58,6 +58,9 @@
           }
         })
       },
+      remove: function() {
+        $("#container li").eq(-1).remove();
+      },
       _destroy: function() {
           // Use the destroy method to reverse everything your plugin has applied
           return this._super();
@@ -70,13 +73,21 @@
     .click( function() {
       $( "#container" ).widgetlist( "add" );
     });
+  $( "#remove-button" )
+    .button()
+    .click( function() {
+      $( "#container" ).widgetlist( "remove" );
+    });
   });
   </script>
 </head>
 <body>
 <form>
-<div id="add-button">+</div>
-<div id="container"></div>
+  <div id="buttons">
+    <div id="add-button">+</div>
+    <div id="remove-button">-</div>
+  </div>
+  <div id="container"></div>
 </form>
 <div>f <span id="relation">?</span> g</div>
  
