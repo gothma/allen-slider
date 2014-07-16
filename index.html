@@ -7,29 +7,49 @@
   <script src="lib/jquery-ui-1.11.0/external/jquery/jquery.js"></script>
   <script src="lib/jquery-ui-1.11.0/jquery-ui.js"></script>
   <script>
-  $(function() {
-    $( "#slider-range" ).slider({
-      orientation: "vertical",
-      range: true,
-      values: [ 17, 67 ],
-      slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+  $( function() {
+    $.widget( "custom.widgetlist", {
+      // These options will be used as defaults
+      options: { className : "" },
+      _create: function() {
+        this.element
+          .addClass( "custom-widgetlist" );
+        this.list = $( "<ul>" ).appendTo( this.element );
+        this.add();
+      },
+      add: function() {
+        $( "<li>" ).appendTo( this.list ).slider({
+          orientation: "horizontal",
+          range: true,
+          values: [ 0, 100 ],
+          slide: function( event, ui ) {
+            $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+          }
+        })
+      },
+      _destroy: function() {
+          // Use the destroy method to reverse everything your plugin has applied
+          return this._super();
+      },
+      _compare: function( interval1, interval2 ) {
+        start1 = $( "#container li" ).get()
       }
     });
-    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+
+  $( "#container" ).widgetlist();
+  $( "#add-button" )
+    .button()
+    .click( function() {
+      $( "#container" ).widgetlist( "add" );
+    });
   });
   </script>
 </head>
 <body>
- 
-<p>
-  <label for="amount">Target sales goal (Millions):</label>
-  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-</p>
- 
-<div id="slider-range" style="height:250px;"></div>
- 
+<form>
+<div id="add-button">+</div>
+<div id="container"></div>
+</form>
  
 </body>
 </html>
